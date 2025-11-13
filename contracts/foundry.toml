@@ -1,0 +1,35 @@
+[profile.default]
+bytecode_hash = "none"
+optimizer = true
+optimizer_runs = 100000
+dynamic_test_linking = true
+libs = ["contracts/dependencies", "dependencies"]
+
+[profile.ci]
+verbosity = 4
+
+[fuzz]
+runs = 10000
+
+[rpc_endpoints]
+mainnet = "${RPC_URL_MAINNET}"
+op = "${RPC_URL_OPTIMISM}"
+base = "${RPC_URL_BASE}"
+base-goerli = "${RPC_URL_BASE_GOERLI}"
+
+[etherscan]
+mainnet = { key="${ETHERSCAN_KEY}", chain=1 }
+op = { key="${ETHERSCAN_KEY}", chain=10 }
+base = { key="${ETHERSCAN_KEY}", chain=8453, url="https://api.basescan.org/api" }
+base-goerli = {key="${ETHERSCAN_KEY}", chain=84531, url="https://api-goerli.basescan.org/api" }
+
+[soldeer]
+recursive_deps = true
+
+[dependencies]
+forge-std = "1.9.7"
+"@openzeppelin-contracts" = "5.5.0"
+
+[lint]
+ignore = ["test/**/*.sol"]
+exclude_lints=["mixed-case-function", "mixed-case-variable", "erc20-unchecked-transfer", "asm-keccak256", "named-struct-fields"]
