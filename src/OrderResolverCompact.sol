@@ -20,7 +20,6 @@ import {OrderResolverCompactPayload} from "./types/OrderResolverCompactPayload.s
 
 /**
  * @title OrderResolverCompact
- * @author jacopo.eth, frangio
  * @notice Resolves a Compact StandardOrder into a ResolvedOrder.
  */
 contract OrderResolverCompact {
@@ -82,20 +81,21 @@ contract OrderResolverCompact {
                 arguments[3] = variableArgument(0); // filler's chosen recipient address will be the first variable
             }
 
-            bytes[] memory attributes = new bytes[](2);
+            bytes[] memory attributes = new bytes[](3);
             {
                 attributes[0] = Attributes.OnlyBefore(order.fillDeadline);
                 attributes[1] = Attributes.SpendsERC20(
-                    InteroperableAddress.formatEvmV1(output.chainId, address(bytes20(output.token))),
+                    InteroperableAddress.formatEvmV1(output.chainId, address(uint160(uint256(output.token)))),
                     /// @dev We assume `output.amount` is a constant
                     Formulas.Const(output.amount),
                     /// @dev We assume `output.settler` is a known supported output settler
-                    InteroperableAddress.formatEvmV1(output.chainId, address(bytes20(output.settler)))
+                    InteroperableAddress.formatEvmV1(output.chainId, address(uint160(uint256(output.settler))))
                 );
+                attributes[2] = Attributes.WithTimestamp(1);
             }
 
             steps[0] = Steps.Call(
-                InteroperableAddress.formatEvmV1(output.chainId, address(bytes20(output.settler))),
+                InteroperableAddress.formatEvmV1(output.chainId, address(uint160(uint256(output.settler)))),
                 IOutputSettler.fill.selector,
                 arguments,
                 attributes,
@@ -126,7 +126,7 @@ contract OrderResolverCompact {
             dependencySteps[0] = 0;
 
             steps[1] = Steps.Call(
-                InteroperableAddress.formatEvmV1(output.chainId, address(bytes20(BASE_HYPERLANE_ORACLE))),
+                InteroperableAddress.formatEvmV1(output.chainId, address(uint160(BASE_HYPERLANE_ORACLE))),
                 IHyperlaneOracle.submit.selector,
                 arguments,
                 attributes,
@@ -157,7 +157,7 @@ contract OrderResolverCompact {
                 }
 
                 attributes[0] = Attributes.OnlyWhenCallResult(
-                    InteroperableAddress.formatEvmV1(order.originChainId, address(bytes20(ARBITRUM_HYPERLANE_ORACLE))),
+                    InteroperableAddress.formatEvmV1(order.originChainId, address(uint160(ARBITRUM_HYPERLANE_ORACLE))),
                     IHyperlaneOracle.isProven.selector,
                     isProvenArguments,
                     abi.encode(true),
@@ -183,7 +183,7 @@ contract OrderResolverCompact {
             dependencySteps[0] = 1;
 
             steps[2] = Steps.Call(
-                InteroperableAddress.formatEvmV1(order.originChainId, address(bytes20(output.settler))),
+                InteroperableAddress.formatEvmV1(order.originChainId, address(uint160(uint256(output.settler)))),
                 IInputSettlerCompact.finalise.selector,
                 arguments,
                 attributes,

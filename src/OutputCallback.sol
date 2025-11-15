@@ -6,7 +6,6 @@ import {IERC20} from "@openzeppelin-contracts-5.5.0/token/ERC20/IERC20.sol";
 
 /**
  * @title OutputCallback
- * @author jacopo.eth, frangio
  * @notice Executes transaction based on provided callback data.
  */
 contract OutputCallback is IOutputCallback {

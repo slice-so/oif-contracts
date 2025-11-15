@@ -14,12 +14,14 @@ runs = 10000
 [rpc_endpoints]
 mainnet = "${RPC_URL_MAINNET}"
 op = "${RPC_URL_OPTIMISM}"
+arbitrum = "${RPC_URL_ARBITRUM}"
 base = "${RPC_URL_BASE}"
 base-goerli = "${RPC_URL_BASE_GOERLI}"
 
 [etherscan]
 mainnet = { key="${ETHERSCAN_KEY}", chain=1 }
 op = { key="${ETHERSCAN_KEY}", chain=10 }
+arbitrum = { key="${ETHERSCAN_KEY}", chain=42161, url="https://api.arbiscan.io/api" }
 base = { key="${ETHERSCAN_KEY}", chain=8453, url="https://api.basescan.org/api" }
 base-goerli = {key="${ETHERSCAN_KEY}", chain=84531, url="https://api-goerli.basescan.org/api" }
 
